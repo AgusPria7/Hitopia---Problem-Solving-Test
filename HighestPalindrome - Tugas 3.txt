@@ -1,0 +1,46 @@
+TUGAS Test Online 3
+(HighestPalindrome)
+
+public class HighestPalindrome {
+
+    public static String highestPalindrome(String s, int k) {
+        char[] chars = s.toCharArray();
+        return highestPalindromeHelper(chars, 0, chars.length - 1, k);
+    }
+
+    private static String highestPalindromeHelper(char[] chars, int left, int right, int k) {
+        if (k < 0) return "-1"; // Melebihi perubahan yang diizinkan
+        if (left >= right) {
+            return k >= 0 ? new String(chars) : "-1";
+        }
+
+        // Jika karakter di kedua ujungnya sama, pindah ke dalam
+        if (chars[left] == chars[right]) {
+            return highestPalindromeHelper(chars, left + 1, right - 1, k);
+        } else {
+            // Coba ganti kedua ujungnya agar sama
+            char maxChar = (char) Math.max(chars[left], chars[right]);
+            char originalLeft = chars[left];
+            char originalRight = chars[right];
+            chars[left] = chars[right] = maxChar;
+
+            // Terjadi pengulangan setelah melakukan penggantian
+            String result = highestPalindromeHelper(chars, left + 1, right - 1, k - 1);
+
+            // Jika rekursi mengembalikan "-1", mundur dan coba kemungkinan lainnya
+            if ("-1".equals(result)) {
+                chars[left] = originalLeft;
+                chars[right] = originalRight;
+                return "-1";
+            }
+            return result;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(highestPalindrome("3943", 1));  // Output: 3993
+        System.out.println(highestPalindrome("932239", 2)); // Output: 992299
+        System.out.println(highestPalindrome("12321", 1));  // Output: 12921
+    }
+}
+
